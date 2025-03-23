@@ -1,20 +1,41 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import  Bienvenida  from './components/Bienvenida';
+import  Canasta  from './components/Canasta';
+import  Turnos  from './components/Turnos';
+import  Perfil from './components/Perfil';
+import * as React from 'react';
+import { View, Text, Image } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import IMAGES from './index';
 
-export default function App() {
+const Tab = createBottomTabNavigator();
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator>
+          <Tab.Screen name="Home" component={Bienvenida} 
+          options= {{tabBarIcon: ({ focused }) => (
+          <Image source={IMAGES.HOME} style={{height: 24, width: 24}}/>
+          ),
+          }}/>
+          <Tab.Screen name="Canasta" component={Canasta}
+          options= {{tabBarIcon: ({ focused }) => (
+            <Image source={IMAGES.CANASTA} style={{height: 24, width: 24}}/>
+            ),
+            }}/>
+          <Tab.Screen name="Turnos" component={Turnos}
+          options= {{tabBarIcon: ({ focused }) => (
+            <Image source={IMAGES.CALENDARIO} style={{height: 24, width: 24}}/>
+            ),
+            }} />
+          <Tab.Screen name="Perfil" component={Perfil}
+          options= {{tabBarIcon: ({ focused }) => (
+            <Image source={IMAGES.PERFIL} style={{height: 24, width: 24}}/>
+            ),
+            }} />
+        </Tab.Navigator>
+      </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
