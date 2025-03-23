@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import  Bienvenida  from './components/Bienvenida';
-import  Canasta  from './components/Canasta';
-import  Turnos  from './components/Turnos';
-import  Perfil from './components/Perfil';
+import  Bienvenida  from './screens/Bienvenida';
+import  Canasta  from './screens/Canasta';
+import  Turnos  from './screens/Turnos';
+import  Perfil from './screens/Perfil';
 import * as React from 'react';
 import { View, Text, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
