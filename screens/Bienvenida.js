@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Button, SafeAreaView } from "react-native";
+import Feed from './Feed';
 
-const Bienvenida = () => {
+const Bienvenida = ({ navigation }) => {
   const [busqueda, setBusqueda] = useState('');
 
   return (
+    <SafeAreaView style={{ flex: 1 }}>
     <View style={styles.container}>
       <Text style={styles.title}>¡Bienvenido a la Farmacia!</Text>
       <Text style={styles.subtitle}>Consulta medicamentos y gestiona tus turnos fácilmente.</Text>
       
-      <View style={styles.searchContainer}> //barra de busqueda//
+      <View style={styles.searchContainer}> 
         <TextInput
           style={styles.searchBar}
           placeholder="🔍 Buscar medicamento..."
@@ -19,14 +21,16 @@ const Bienvenida = () => {
         />
       </View>
 
-      <TouchableOpacity style={styles.button}>   // boton seleccionar el tipo de EPS //
+      <TouchableOpacity style={styles.button}>  
         <Text style={styles.buttonText}>Tipo de EPS</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.button, styles.consultButton]}> //*boton de consultar*//
+      <TouchableOpacity style={[styles.button, styles.consultButton]}
+      onPress={() => navigation.navigate('Feed')}> 
         <Text style={styles.buttonText}>Consultar</Text>
       </TouchableOpacity>
     </View>
+    </SafeAreaView>
   );
 };
 
@@ -84,6 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  
 });
 
 export default Bienvenida;

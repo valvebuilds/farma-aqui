@@ -1,20 +1,23 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import  Bienvenida  from './screens/Bienvenida';
+import BienvenidaStack from './screens/BienvenidaStack';
 import  Canasta  from './screens/Canasta';
 import  Turnos  from './screens/Turnos';
 import  Perfil from './screens/Perfil';
 import * as React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Button} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import IMAGES from './index';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import dbcontext from './dbcontext';
 
 const Tab = createBottomTabNavigator();
 
 function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-          <Tab.Screen name="Home" component={Bienvenida} 
+      <Tab.Navigator screenOptions={{ headerShown: false }}>
+          <Tab.Screen name="Bienvenida" component={BienvenidaStack} 
           options= {{tabBarIcon: ({ focused }) => (
           <Image source={IMAGES.HOME} style={{height: 24, width: 24}}/>
           ),
@@ -36,6 +39,7 @@ function App() {
             }} />
         </Tab.Navigator>
       </NavigationContainer>
+      
   );
 }
 export default App;

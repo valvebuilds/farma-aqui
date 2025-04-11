@@ -4,7 +4,11 @@ function Canasta(){
     return(
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Mi Canasta</Text>
+        
+      
         <Pressable></Pressable>
+
+
         </View>
     );
 }

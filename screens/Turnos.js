@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 
 const Turnos = () => {
   const [turnos, setTurnos] = useState([
@@ -7,17 +7,9 @@ const Turnos = () => {
     { id: '2', fecha: '27/03/2025', hora: '02:00 PM', estado: 'Pendiente' },
   ]);
 
-  const agregarTurno = () => {
-    const nuevoTurno = {
-      id: (turnos.length + 1).toString(),
-      fecha: '30/03/2025',
-      hora: '11:00 AM',
-      estado: 'Pendiente',
-    };
-    setTurnos([...turnos, nuevoTurno]);
-  };
-
+  
   return (
+    <SafeAreaView style={{ flex: 1 }}>
     <View style={styles.container}>
       <Text style={styles.title}>🗓 Mis Turnos</Text>
       
@@ -37,10 +29,9 @@ const Turnos = () => {
         )}
       />
       
-      <TouchableOpacity style={styles.fab} onPress={agregarTurno}>
-        <Text style={styles.fabText}>＋</Text>
-      </TouchableOpacity>
+    
     </View>
+    </SafeAreaView>
   );
 };
 

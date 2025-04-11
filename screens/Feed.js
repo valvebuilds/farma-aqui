@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Text, ActivityIndicator, StyleSheet, FlatList } from "react-native";
 import axios from "axios";
 
-const Citas = () => {
+const Feed = () => {
   const [getResponse, setResponse] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchQuotes = async () => {
+    const fetchMedicamentos = async () => {
       try {
-        const response = await axios.get('https://quote-api.com/api/v1/some'); //cambiar esta ruta si o si //
-        setResponse(response.data.dat);
+        const response = await axios.get('https://farma-aqui-default-rtdb.firebaseio.com/medicamentos.json'); 
+        setResponse(response.data);
       } catch (error) {
-        console.error("Error al obtener la cita:", error);
+        console.error("Error al obtener listado de medicamentos:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchQuotes();
+    fetchMedicamentos();
   }, []);
 
   if (loading) {
@@ -29,8 +29,17 @@ const Citas = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Cita: {getResponse}</Text>
+    <View style={{ padding: 20 }}>
+      <FlatList
+        data={getResponse}
+        renderItem={({ item }) => (
+          <View style = {styles.feedcard}>
+            <Text>{item.name}</Text>
+            <Text>{item.dosis} — {item.presentacion}</Text>
+            <Text>{item.indicaciones}</Text>
+          </View>
+        )}
+      />
     </View>
   );
 };
@@ -42,13 +51,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    padding: 20,
+    padding: 40,
     justifyContent: 'center',
   },
   text: {
-    fontSize: 18,
+    fontSize: 20,
     color: '#2c3e50',
   },
+  feedcard: {
+    marginBottom: 10,
+  }
 });
 
-export default Citas;
+export default Feed;
