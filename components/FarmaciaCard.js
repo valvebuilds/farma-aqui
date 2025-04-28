@@ -3,7 +3,7 @@ import { StyleSheet} from 'react-native';
 
 
 
-const MedicamentoCard = ({ medicamento }) => {
+const FarmaciaCard = ({ medicamento }) => {
   return (
     <Card style={{ marginBottom: 10, padding: 15 }}>
       <Text style= {styles.title}>{medicamento.name}</Text>
