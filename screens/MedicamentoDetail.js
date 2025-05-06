@@ -1,0 +1,158 @@
+import React, { useState } from "react";
+import { View, Text, StyleSheet, FlatList, TextInput } from "react-native";
+import { Button, Card } from "react-native-paper";
+
+const MedicamentoDetail = ({ route }) => {
+  const { medicamento } = route.params;
+
+  /*const [filter, setFilter] = useState("");
+  const [filteredPharmacies, setFilteredPharmacies] = useState(medication.pharmacies);
+
+  const handleFilter = () => {
+    const lowerFilter = filter.toLowerCase();
+    const filtered = medication.pharmacies.filter((pharmacy) =>
+      pharmacy.name.toLowerCase().includes(lowerFilter)
+    );
+    setFilteredPharmacies(filtered);
+  };*/
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>{medicamento.name}</Text>
+      <Text style={styles.description}>{medicamento.description}</Text>
+      <Card style={styles.card}>
+        <Card.Content>
+          <Text style={styles.detailsTitle}>Detalles</Text>
+          <Text style={styles.detailsText}>{medicamento.dosis} - {medicamento.presentacion}</Text>
+        </Card.Content>
+      </Card>
+
+      <View style={styles.filterContainer}>
+        <TextInput
+          placeholder="Buscar farmacia..."
+          //value={filter}
+         // onChangeText={setFilter}
+          style={styles.input}
+          placeholderTextColor="#888"
+        />
+        <Button
+          mode="contained"
+          //onPress={handleFilter}
+          style={styles.filterButton}
+        >
+          Filtrar
+        </Button>
+      </View>
+{/*
+      <Text style={styles.listTitle}>Farmacias con Stock</Text>
+      {filteredPharmacies.length > 0 ? (
+        <FlatList
+          data={filteredPharmacies}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <Card style={styles.pharmacyCard}>
+              <Card.Content>
+                <Text style={styles.pharmacyName}>{item.name}</Text>
+                <Text style={styles.pharmacyInfo}>Dirección: {item.address}</Text>
+                <Text style={styles.pharmacyInfo}>Teléfono: {item.phone}</Text>
+              </Card.Content>
+            </Card>
+          )}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        />
+      ) : (
+        <Text style={styles.noStockText}>
+          No hay stock en ninguna farmacia.
+        </Text>
+      )}*/}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#FAFAFA",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#2C2C2C",
+    marginBottom: 5,
+    paddingTop: 120
+  },
+  description: {
+    fontSize: 18,
+    color: "#555",
+    marginBottom: 20,
+  },
+  card: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    marginBottom: 20,
+    elevation: 2,
+  },
+  detailsTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 8,
+    color: "#333",
+  },
+  detailsText: {
+    fontSize: 16,
+    color: "#666",
+  },
+  filterContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  input: {
+    flex: 1,
+    borderColor: "#CCC",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    fontSize: 16,
+    marginRight: 10,
+    backgroundColor: "#FFFFFF",
+  },
+  filterButton: {
+    borderRadius: 8,
+    paddingVertical: 6,
+    backgroundColor: "#2196F3",
+  },
+  listTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#2C2C2C",
+    marginBottom: 10,
+  },
+  pharmacyCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    marginBottom: 12,
+    padding: 10,
+    elevation: 1,
+  },
+  pharmacyName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  pharmacyInfo: {
+    fontSize: 16,
+    color: "#555",
+    marginTop: 4,
+  },
+  noStockText: {
+    fontSize: 18,
+    color: "#C62828",
+    textAlign: "center",
+    marginTop: 20,
+  },
+});
+
+export default MedicamentoDetail;

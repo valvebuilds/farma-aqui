@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Button, SafeAreaView } from "react-native";
-import Feed from './Feed';
+import Feed from './FeedMedicamentos';
+import { useTheme } from '../context/ThemeContext';
 
-const Bienvenida = ({ navigation }) => {
+const Home = ({ navigation }) => {
   const [busqueda, setBusqueda] = useState('');
-
+  const { colors, fonts } = useTheme();
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <View style={styles.container}>
-      <Text style={styles.title}>¡Bienvenido a la Farmacia!</Text>
+    <View style={[styles.container, {backgroundColor:colors.background}]}>
+      <Text style={styles.title}>¡Bienvenido a farmAquí!</Text>
       <Text style={styles.subtitle}>Consulta medicamentos y gestiona tus turnos fácilmente.</Text>
       
       <View style={styles.searchContainer}> 
@@ -21,12 +22,8 @@ const Bienvenida = ({ navigation }) => {
         />
       </View>
 
-      <TouchableOpacity style={styles.button}>  
-        <Text style={styles.buttonText}>Tipo de EPS</Text>
-      </TouchableOpacity>
-
       <TouchableOpacity style={[styles.button, styles.consultButton]}
-      onPress={() => navigation.navigate('Feed')}> 
+      onPress={() => navigation.navigate('Medicamentos')}> 
         <Text style={styles.buttonText}>Consultar</Text>
       </TouchableOpacity>
     </View>
@@ -39,7 +36,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
     paddingHorizontal: 20,
   },
   title: {
@@ -74,14 +70,14 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    backgroundColor: '#3498db',
+    backgroundColor: '#3F3D56',
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
     marginVertical: 5,
   },
   consultButton: {
-    backgroundColor: '#2ecc71', // color del boton consultar //
+    backgroundColor: '#28BC63', // color del boton consultar //
   },
   buttonText: {
     color: '#fff',
@@ -91,4 +87,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default Bienvenida;
+export default Home;
