@@ -1,25 +1,45 @@
-import { Card, Text } from 'react-native-paper';
+import { Card, Text, Button } from 'react-native-paper';
 import { StyleSheet} from 'react-native';
-
+import { useContext, useState } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 
 const MedicamentoCard = ({ medicamento }) => {
+
+  const context = useContext(AuthContext);
+  const {canasta, añadirCanasta, eliminarCanasta} = context;
+
+  const yaEstaEnCanasta = canasta.some(item => item.id === medicamento.id);
+
+  const handleAdd = () => {
+    añadirCanasta(medicamento);
+  }
+
+  const handleDelete = () => {
+    eliminarCanasta(medicamento);
+  }
+
   return (
-    <Card style={{ marginBottom: 10, padding: 15 }}>
+    <Card style={styles.feedcard } >
       <Text style= {styles.title}>{medicamento.name}</Text>
       <Text style={styles.description}>Dosis: {medicamento.dosis}</Text>
       <Text style={styles.description}>Cantidad: {medicamento.presentacion}</Text>
       <Text style={styles.description}>Descripcion: {medicamento.descripcion}</Text>
-     {/* <Button mode="contained" onPress={() => onEliminar(medicamento.id)} style={{ marginTop: 5 }}>
+     
+      {!yaEstaEnCanasta&& <Button mode="contained" onPress={() => handleAdd()} style={{ marginTop: 5 }}>
+        Agregar a canasta
+      </Button>}
+      {yaEstaEnCanasta&& <Button mode="contained" onPress={() => handleDelete()} style={{ marginTop: 5 }}>
         Eliminar
-      </Button>*/}
+      </Button>}
     </Card>
+
   );
 };
 
 const styles = StyleSheet.create({
 feedcard: {
-  backgroundColor: '#fff',
+  backgroundColor: 'white',
   padding: 20,
   borderRadius: 15,
   marginBottom: 12,

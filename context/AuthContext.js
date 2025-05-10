@@ -1,36 +1,60 @@
 import React, {createContext, useEffect, useState} from 'react';
 import axios from 'axios';
-import Feed from '../screens/FeedMedicamentos';
 
 const DB_URL = "https://farma-aqui-default-rtdb.firebaseio.com/";
-export const AuthContext = createContext({
-    myData: [],
-    isLoading: true
-})
+
+export const AuthContext = createContext();
+
 
 const AuthContextProvider = ({children}) => { 
-    const [misDatos, setMisDatos] = useState([]);
+    const [medicamentos, setMedicamentos] = useState([]);
+    const [farmacias, setFarmacias] = useState([]);
+    const [stock, setStock] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [token, setToken] = useState(null);
+
+    const [canasta, setCanasta] = useState([]);
+
+    const asignarToken = (token) => {
+        setToken(token);
+    }
+
+    const añadirCanasta = ( med ) => {
+      setCanasta(canasta => [...canasta, med]);
+    }
+
+    const eliminarCanasta = ( med ) => {
+      setCanasta(canasta.filter(item => item !== med));
+    }
 
     useEffect(() => {
-        const fetchMedicamentos = async () => {
+        const fetchData = async () => {
           try {
-            const response = await axios.get('https://farma-aqui-default-rtdb.firebaseio.com/medicamentos.json'); 
-            setMisDatos(response.data);
+            const [medsResponse, farmsResponse, stockResponse] = await Promise.all([
+              axios.get(`${DB_URL}/medicamentos.json`),
+              axios.get(`${DB_URL}/farmacias.json`),
+              axios.get(`${DB_URL}/stock.json`)
+            ]);
+            setMedicamentos(medsResponse.data);
+            setFarmacias(farmsResponse.data);
+            setStock(stockResponse.data);
+
             setIsLoading(false);
-            console.log(misDatos);
           } catch (error) {
-            console.error("Error al obtener listado de medicamentos:", error);
-          } 
-          
+            console.error("Error al obtener datos:", error);
+          } finally {
+            setIsLoading(false); // Se ejecuta haya o no error
+          }
         };
-        fetchMedicamentos();
+
+        fetchData();
       }, []);
 
     return(
-        <AuthContext.Provider value = {{misDatos, isLoading}} >
+        <AuthContext.Provider value = {{medicamentos, farmacias, stock, isLoading, token, 
+                                      asignarToken, canasta, añadirCanasta, eliminarCanasta}} >
         {children}
         </AuthContext.Provider>
         )
 }
-export default AuthContextProvider;
+export default AuthContextProvider; 

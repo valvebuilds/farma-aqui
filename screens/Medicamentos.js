@@ -1,12 +1,28 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, Text, ActivityIndicator, StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import axios from "axios";
+import { useRoute } from '@react-navigation/native';
 import { AuthContext } from "../context/AuthContext";
 import  MedicamentoCard  from "../components/MedicamentoCard";
+import { Button } from "react-native-paper";
 
-const Feed = ({navigation}) => {
-  const {misDatos, isLoading }= useContext(AuthContext);
-  const [seleccionado, setSeleccionado] = useState("");
+const FeedMedicamentos = ({ navigation }) => {
+  const {medicamentos, isLoading, canasta }= useContext(AuthContext);
+  const route = useRoute();
+  const [filtrado, setFiltrado] = useState(medicamentos)
+  
+  useEffect(() => {
+    if (route.params?.busqueda) {
+      const { busqueda } = route.params;
+      const resultados = medicamentos.filter(item =>
+        item.name.toLowerCase().includes(busqueda.toLowerCase())
+      );
+      setFiltrado(resultados);
+    } else {
+      setFiltrado(medicamentos); // Si no hay búsqueda, muestra todos los medicamentos
+    }
+  }, [route.params?.busqueda, medicamentos]); 
+  
+
   if (isLoading) {
     return (
       <View style={styles.loaderContainer}>
@@ -17,9 +33,9 @@ const Feed = ({navigation}) => {
   return (
     <View style={{ padding: 20 }}>
       <FlatList
-        data={misDatos}
+        data={filtrado}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigation.navigate('Medicamento', {medicamento: item})}>
+          <TouchableOpacity onPress={() => navigation.navigate('Detalles', {item})}>
           <MedicamentoCard
           medicamento= {item}/>
         </TouchableOpacity>
@@ -44,4 +60,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default Feed;
+export default FeedMedicamentos ;

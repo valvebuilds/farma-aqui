@@ -7,11 +7,3 @@ import App from './App';
 // the environment is set up appropriately
 registerRootComponent(App);
 
-const IMAGES = {
-    HOME: require('./assets/home.png'),
-    CANASTA: require('./assets/canasta.png'),
-    CALENDARIO: require('./assets/calendario.png'),
-    PERFIL: require('./assets/user.png')
-};
-
-export default IMAGES;

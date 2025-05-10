@@ -1,15 +1,45 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Button, SafeAreaView } from "react-native";
-import Feed from './FeedMedicamentos';
+import React, { useState, useContext, useEffect } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Button, SafeAreaView, FlatList } from "react-native"
 import { useTheme } from '../context/ThemeContext';
+import { AuthContext } from '../context/AuthContext';
+
 
 const Home = ({ navigation }) => {
-  const [busqueda, setBusqueda] = useState('');
+  const contexto = useContext(AuthContext);
+
+  if (!contexto) {
+    console.log('⚠️ AuthContext es undefined');
+    return <Text>Error al cargar contexto</Text>;
+  }
+
+  const { medicamentos, isLoading } = contexto;
+  const [texto, setTexto] = useState('');
+  const [busqueda, setBusqueda] = useState(null);
+  const [filtrado, setFiltrado] = useState([]);
+
+  const handleSearch = (text) => {
+    setTexto(text);
+    const resultados = medicamentos.filter(item =>
+      item.name.toLowerCase().startsWith(text.toLowerCase())
+    );
+    setFiltrado(resultados);
+  }
+
+  useEffect(()=> {
+    if (busqueda) {
+      navigation.navigate('Medicamentos',{ busqueda: busqueda });
+      setBusqueda(null);
+    }
+  }, [busqueda, navigation]);
+
+  
+  if (isLoading) return <Text>Cargando medicamentos...</Text>;
+
   const { colors, fonts } = useTheme();
   return (
     <SafeAreaView style={{ flex: 1 }}>
     <View style={[styles.container, {backgroundColor:colors.background}]}>
-      <Text style={styles.title}>¡Bienvenido a PharmAquí!</Text>
+      <Text style={styles.title}>¡Bienvenido a FarmAquí!</Text>
       <Text style={styles.subtitle}>Consulta medicamentos y gestiona tus turnos fácilmente.</Text>
       
       <View style={styles.searchContainer}> 
@@ -17,9 +47,17 @@ const Home = ({ navigation }) => {
           style={styles.searchBar}
           placeholder="🔍 Buscar medicamento..."
           placeholderTextColor="#B0B0B0"
-          value={busqueda}
-          onChangeText={setBusqueda}
+          value={texto}
+          onChangeText={handleSearch}
         />
+        <FlatList
+          data={filtrado}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => setBusqueda(item.name)}>
+              <Text>{item.name}</Text>
+            </TouchableOpacity>
+  )}
+/>
       </View>
 
       <TouchableOpacity style={[styles.button, styles.consultButton]}

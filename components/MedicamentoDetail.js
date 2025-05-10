@@ -1,40 +1,43 @@
-import React, { useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { View, Text, StyleSheet, FlatList, TextInput } from "react-native";
 import { Button, Card } from "react-native-paper";
+import CanastaBoton from "./CanastaBoton";
+
 
 const MedicamentoDetail = ({ route }) => {
-  const { medicamento } = route.params;
+  const { item: medicamento } = route.params;
+  const {farmacias, stock, isLoading }= useContext(AuthContext); 
+  const [farmaciasStock, setfarmaciasStock] = useState(farmacias);
 
-  /*const [filter, setFilter] = useState("");
-  const [filteredPharmacies, setFilteredPharmacies] = useState(medication.pharmacies);
-
-  const handleFilter = () => {
-    const lowerFilter = filter.toLowerCase();
-    const filtered = medication.pharmacies.filter((pharmacy) =>
-      pharmacy.name.toLowerCase().includes(lowerFilter)
+  useEffect(() => {
+    const stockDisponible = stock.filter(farmacia =>
+      farmacia.medicamentos.some(med =>
+        med.id_medicamento === medicamento.id && med.cantidad > 0
+      )
     );
-    setFilteredPharmacies(filtered);
-  };*/
+    setfarmaciasStock(stockDisponible);
+  }, [stock, medicamento]);  
+
+  const filteredPharmacies = (farmacias.filter(farmacia =>
+    farmaciasStock.some(stockFarmacia =>
+      stockFarmacia.nombre_farmacia === farmacia.nombre_del_establecimiento
+    ))
+  );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{medicamento.name}</Text>
-      <Text style={styles.description}>{medicamento.description}</Text>
+      <CanastaBoton></CanastaBoton>
       <Card style={styles.card}>
         <Card.Content>
+        <Text style={styles.title}>{medicamento.name}</Text>
           <Text style={styles.detailsTitle}>Detalles</Text>
+          <Text style={styles.description}>{medicamento.indicaciones} - {medicamento.via_administracion}</Text>
           <Text style={styles.detailsText}>{medicamento.dosis} - {medicamento.presentacion}</Text>
         </Card.Content>
       </Card>
 
       <View style={styles.filterContainer}>
-        <TextInput
-          placeholder="Buscar farmacia..."
-          //value={filter}
-         // onChangeText={setFilter}
-          style={styles.input}
-          placeholderTextColor="#888"
-        />
         <Button
           mode="contained"
           //onPress={handleFilter}
@@ -43,18 +46,16 @@ const MedicamentoDetail = ({ route }) => {
           Filtrar
         </Button>
       </View>
-{/*
+
       <Text style={styles.listTitle}>Farmacias con Stock</Text>
       {filteredPharmacies.length > 0 ? (
         <FlatList
           data={filteredPharmacies}
-          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <Card style={styles.pharmacyCard}>
               <Card.Content>
-                <Text style={styles.pharmacyName}>{item.name}</Text>
-                <Text style={styles.pharmacyInfo}>Dirección: {item.address}</Text>
-                <Text style={styles.pharmacyInfo}>Teléfono: {item.phone}</Text>
+                <Text style={styles.pharmacyName}>{item.nombre_del_establecimiento}</Text>
+                <Text style={styles.pharmacyInfo}>{item.direccion}-{item.telefono}</Text>
               </Card.Content>
             </Card>
           )}
@@ -64,7 +65,7 @@ const MedicamentoDetail = ({ route }) => {
         <Text style={styles.noStockText}>
           No hay stock en ninguna farmacia.
         </Text>
-      )}*/}
+      )}
     </View>
   );
 };
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#2C2C2C",
     marginBottom: 5,
-    paddingTop: 120
+    paddingTop: 12
   },
   description: {
     fontSize: 18,
