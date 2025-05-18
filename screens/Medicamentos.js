@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, ActivityIndicator, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { View, ActivityIndicator, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { useRoute } from '@react-navigation/native';
 import { AuthContext } from "../context/AuthContext";
 import  MedicamentoCard  from "../components/MedicamentoCard";
-import { Button } from "react-native-paper";
 
 const FeedMedicamentos = ({ navigation }) => {
   const {medicamentos, isLoading, canasta }= useContext(AuthContext);

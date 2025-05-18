@@ -3,7 +3,7 @@ import { View, Text, Pressable, FlatList, TouchableOpacity} from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import MedicamentoCard from '../components/MedicamentoCard';
 
-function Canasta(){
+function Canasta( {navigation}){
     const { canasta, añadirCanasta, eliminarCanasta } = useContext(AuthContext);
 
     return(
@@ -13,7 +13,7 @@ function Canasta(){
             <FlatList
                 data={canasta}
                 renderItem={({ item }) => (
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Detalles', {item})}>
                 <MedicamentoCard
                 showAddButton={false}
                 medicamento= {item}/>

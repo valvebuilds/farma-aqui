@@ -10,6 +10,9 @@ const AuthContextProvider = ({children}) => {
     const [medicamentos, setMedicamentos] = useState([]);
     const [farmacias, setFarmacias] = useState([]);
     const [stock, setStock] = useState([]);
+    const [eps, setEps] = useState([]);
+    const [redEps, setRedEps] = useState([]);
+
     const [isLoading, setIsLoading] = useState(true);
     const [token, setToken] = useState(null);
 
@@ -30,14 +33,18 @@ const AuthContextProvider = ({children}) => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const [medsResponse, farmsResponse, stockResponse] = await Promise.all([
+            const [medsResponse, farmsResponse, stockResponse, epsResponse, redEpsResponse] = await Promise.all([
               axios.get(`${DB_URL}/medicamentos.json`),
               axios.get(`${DB_URL}/farmacias.json`),
-              axios.get(`${DB_URL}/stock.json`)
+              axios.get(`${DB_URL}/stock.json`),
+              axios.get(`${DB_URL}/eps.json`),
+              axios.get(`${DB_URL}/red-farmacias-eps.json`)
             ]);
             setMedicamentos(medsResponse.data);
             setFarmacias(farmsResponse.data);
             setStock(stockResponse.data);
+            setEps(epsResponse.data);
+            setRedEps(redEpsResponse.data);
 
             setIsLoading(false);
           } catch (error) {
@@ -51,7 +58,7 @@ const AuthContextProvider = ({children}) => {
       }, []);
 
     return(
-        <AuthContext.Provider value = {{medicamentos, farmacias, stock, isLoading, token, 
+        <AuthContext.Provider value = {{medicamentos, farmacias, stock, eps, redEps, isLoading, token, 
                                       asignarToken, canasta, añadirCanasta, eliminarCanasta}} >
         {children}
         </AuthContext.Provider>

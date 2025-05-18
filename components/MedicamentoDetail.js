@@ -3,12 +3,14 @@ import { AuthContext } from "../context/AuthContext";
 import { View, Text, StyleSheet, FlatList, TextInput } from "react-native";
 import { Button, Card } from "react-native-paper";
 import CanastaBoton from "./CanastaBoton";
+import FiltroEpsCard from "./FiltroEpsCard";
 
 
 const MedicamentoDetail = ({ route }) => {
   const { item: medicamento } = route.params;
   const {farmacias, stock, isLoading }= useContext(AuthContext); 
   const [farmaciasStock, setfarmaciasStock] = useState(farmacias);
+  const [showFilter, setShowFilter] = useState(false);
 
   useEffect(() => {
     const stockDisponible = stock.filter(farmacia =>
@@ -25,6 +27,10 @@ const MedicamentoDetail = ({ route }) => {
     ))
   );
 
+  const handleFilter = () =>{
+    setShowFilter(!showFilter);
+  }
+
   return (
     <View style={styles.container}>
       <CanastaBoton></CanastaBoton>
@@ -40,11 +46,12 @@ const MedicamentoDetail = ({ route }) => {
       <View style={styles.filterContainer}>
         <Button
           mode="contained"
-          //onPress={handleFilter}
           style={styles.filterButton}
+          onPress={() =>{handleFilter()}}
         >
           Filtrar
         </Button>
+        {showFilter&& <FiltroEpsCard/>}
       </View>
 
       <Text style={styles.listTitle}>Farmacias con Stock</Text>

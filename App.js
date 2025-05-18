@@ -9,7 +9,7 @@ import { navigationRef } from './Navigation';
 
 function App() {
   return (
-    
+  
       <AuthContextProvider>
         <NavigationContainer ref={navigationRef}>
         <Navigation></Navigation>
