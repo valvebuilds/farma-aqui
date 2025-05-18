@@ -3,16 +3,12 @@ import { StyleSheet} from 'react-native';
 
 
 
-const FarmaciaCard = ({ medicamento }) => {
+const FarmaciaCard = ({ farmacia }) => {
   return (
     <Card style={{ marginBottom: 10, padding: 15 }}>
-      <Text style= {styles.title}>{medicamento.name}</Text>
-      <Text style={styles.description}>Dosis: {medicamento.dosis}</Text>
-      <Text style={styles.description}>Cantidad: {medicamento.presentacion}</Text>
-      <Text style={styles.description}>Descripcion: {medicamento.descripcion}</Text>
-     {/* <Button mode="contained" onPress={() => onEliminar(medicamento.id)} style={{ marginTop: 5 }}>
-        Eliminar
-      </Button>*/}
+      <Text style= {styles.title}>{farmacia.nombre_de_establecimiento}</Text>
+      <Text style={styles.description}>Dirección: {farmacia.direccion}</Text>
+      <Text style={styles.description}>Teléfono: {farmacia.telefono}</Text>
     </Card>
   );
 };
@@ -47,4 +43,4 @@ description: {
   paddingBottom: 8 }
 
 })
-export default MedicamentoCard;
+export default FarmaciaCard;

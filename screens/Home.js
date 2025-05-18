@@ -38,7 +38,7 @@ const Home = ({ navigation }) => {
   const { colors, fonts } = useTheme();
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <View style={[styles.container, {backgroundColor:colors.background}]}>
+    <View style={styles.container}>
       <Text style={styles.title}>¡Bienvenido a FarmAquí!</Text>
       <Text style={styles.subtitle}>Consulta medicamentos y gestiona tus turnos fácilmente.</Text>
       
@@ -71,6 +71,7 @@ const Home = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor:'white',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

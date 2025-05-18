@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { View, Text, StyleSheet, FlatList, TextInput } from "react-native";
+import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity } from "react-native";
 import { Button, Card } from "react-native-paper";
 import CanastaBoton from "./CanastaBoton";
 import FiltroEpsCard from "./FiltroEpsCard";
 
 
-const MedicamentoDetail = ({ route }) => {
+const MedicamentoDetail = ({ route, navigation }) => {
   const { item: medicamento } = route.params;
   const {farmacias, stock, isLoading }= useContext(AuthContext); 
   const [farmaciasStock, setfarmaciasStock] = useState(farmacias);
@@ -59,12 +59,14 @@ const MedicamentoDetail = ({ route }) => {
         <FlatList
           data={filteredPharmacies}
           renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => navigation.navigate('Detalles de Farmacia', {item})}>
             <Card style={styles.pharmacyCard}>
               <Card.Content>
                 <Text style={styles.pharmacyName}>{item.nombre_del_establecimiento}</Text>
                 <Text style={styles.pharmacyInfo}>{item.direccion}-{item.telefono}</Text>
               </Card.Content>
             </Card>
+            </TouchableOpacity>
           )}
           contentContainerStyle={{ paddingBottom: 20 }}
         />

@@ -10,6 +10,7 @@ import Ajustes from './screens/Ajustes';
 import LoginScreen from './screens/LoginScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import CanastaBoton from './components/CanastaBoton';
+import FarmaciaDetail from './components/FarmaciaDetail';
 import { createNavigationContainerRef } from '@react-navigation/native';
 
 
@@ -30,6 +31,7 @@ function StackGroup(){
         <Stack.Screen name="Home" component={TabGroup} options={{ headerShown: false }}/>
         <Stack.Screen name="Medicamentos" component={Medicamentos} />
         <Stack.Screen name="Detalles" component={MedicamentoDetail}/>
+        <Stack.Screen name="Detalles de Farmacia" component={FarmaciaDetail}/>
     </Stack.Navigator>
     )
 }
