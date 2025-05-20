@@ -1,11 +1,15 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Button, SafeAreaView, FlatList } from "react-native"
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, SafeAreaView, FlatList } from "react-native";
 import { useTheme } from '../context/ThemeContext';
 import { AuthContext } from '../context/AuthContext';
 
-
 const Home = ({ navigation }) => {
   const contexto = useContext(AuthContext);
+  const { theme, modoOscuro } = useTheme();
+
+  const [texto, setTexto] = useState('');
+  const [busqueda, setBusqueda] = useState(null);
+  const [filtrado, setFiltrado] = useState([]);
 
   if (!contexto) {
     console.log('⚠️ AuthContext es undefined');
@@ -13,9 +17,6 @@ const Home = ({ navigation }) => {
   }
 
   const { medicamentos, isLoading } = contexto;
-  const [texto, setTexto] = useState('');
-  const [busqueda, setBusqueda] = useState(null);
-  const [filtrado, setFiltrado] = useState([]);
 
   const handleSearch = (text) => {
     setTexto(text);
@@ -23,55 +24,89 @@ const Home = ({ navigation }) => {
       item.name.toLowerCase().startsWith(text.toLowerCase())
     );
     setFiltrado(resultados);
-  }
+  };
 
-  useEffect(()=> {
+  useEffect(() => {
     if (busqueda) {
-      navigation.navigate('Medicamentos',{ busqueda: busqueda });
+      navigation.navigate('Medicamentos', { busqueda: busqueda });
       setBusqueda(null);
     }
   }, [busqueda, navigation]);
 
-  
   if (isLoading) return <Text>Cargando medicamentos...</Text>;
 
-  const { colors, fonts } = useTheme();
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-    <View style={styles.container}>
-      <Text style={styles.title}>¡Bienvenido a FarmAquí!</Text>
-      <Text style={styles.subtitle}>Consulta medicamentos y gestiona tus turnos fácilmente.</Text>
-      
-      <View style={styles.searchContainer}> 
-        <TextInput
-          style={styles.searchBar}
-          placeholder="🔍 Buscar medicamento..."
-          placeholderTextColor="#B0B0B0"
-          value={texto}
-          onChangeText={handleSearch}
-        />
-        <FlatList
-          data={filtrado}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => setBusqueda(item.name)}>
-              <Text>{item.name}</Text>
-            </TouchableOpacity>
-  )}
-/>
-      </View>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
+      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+        <Text style={[styles.title, { color: theme.colors.text }]}>¡Bienvenido a FarmAquí!</Text>
+        <Text style={[styles.subtitle, { color: theme.colors.text }]}>
+          Consulta medicamentos y gestiona tus turnos fácilmente.
+        </Text>
 
-      <TouchableOpacity style={[styles.button, styles.consultButton]}
-      onPress={() => navigation.navigate('Medicamentos')}> 
-        <Text style={styles.buttonText}>Consultar</Text>
-      </TouchableOpacity>
-    </View>
+        <View
+          style={[
+            styles.searchContainer,
+            {
+              backgroundColor: theme.colors.cardBackground,
+              // Aquí se quita el borde del contenedor para eliminar la línea externa
+              // borderColor: modoOscuro ? '#CCCCCC' : theme.colors.text,
+              // borderWidth: 1,
+            },
+          ]}
+        >
+          <TextInput
+            style={[
+              styles.searchBar,
+              {
+                color: theme.colors.text,
+                backgroundColor: modoOscuro ? '#2A2A2A' : '#F2F2F2',
+                borderRadius: 17,
+                paddingHorizontal: 20,
+                borderWidth: 1,
+                borderColor: modoOscuro ? '#CCCCCC' : '#999',
+              },
+            ]}
+            placeholder="🔍 Buscar medicamento..."
+            placeholderTextColor={modoOscuro ? '#AAAAAA' : '#777'}
+            value={texto}
+            onChangeText={handleSearch}
+          />
+
+          <FlatList
+            data={filtrado}
+            keyExtractor={(item) => item.id?.toString() || item.name}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => setBusqueda(item.name)}>
+                <Text style={{ color: theme.colors.text }}>{item.name}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={[
+            styles.button,
+            styles.consultButton,
+            {
+              backgroundColor: modoOscuro ? '#28BC63' : theme.colors.primary,
+              borderColor: modoOscuro ? '#28BC63' : 'transparent',
+              borderWidth: modoOscuro ? 1 : 0,
+            },
+          ]}
+          onPress={() => navigation.navigate('Medicamentos')}
+        >
+          <Text style={[styles.buttonText, { color: '#fff' }]}>Consultar</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   container: {
-    backgroundColor:'white',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -80,50 +115,38 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#7f8c8d',
     textAlign: 'center',
     marginBottom: 20,
     paddingHorizontal: 10,
   },
   searchContainer: {
     width: '100%',
-    backgroundColor: '#fff',
     borderRadius: 12,
     paddingHorizontal: 15,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 3,
-    marginBottom: 15,
+    paddingVertical: 10,
+    marginBottom: 20,
+    // Shadow o borde removidos para evitar líneas externas
   },
   searchBar: {
     height: 45,
-    fontSize: 16,
-    color: '#333',
+    fontSize: 17,
   },
   button: {
     width: '100%',
-    backgroundColor: '#3F3D56',
     paddingVertical: 12,
-    borderRadius: 8,
+    borderRadius: 7,
     alignItems: 'center',
     marginVertical: 5,
   },
-  consultButton: {
-    backgroundColor: '#28BC63', // color del boton consultar //
-  },
+  consultButton: {},
   buttonText: {
-    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  
 });
 
 export default Home;
