@@ -1,7 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, SafeAreaView, FlatList } from "react-native";
+import { View, Text, TextInput, StyleSheet, Button, TouchableOpacity, SafeAreaView, FlatList, useFocusEffect } from "react-native";
 import { useTheme } from '../context/ThemeContext';
 import { AuthContext } from '../context/AuthContext';
+import Ubicacion from '../Geolocation';
+
 
 const Home = ({ navigation }) => {
   const contexto = useContext(AuthContext);
@@ -29,7 +31,9 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     if (busqueda) {
       navigation.navigate('Medicamentos', { busqueda: busqueda });
-      setBusqueda(null);
+      setBusqueda('');
+      setTexto('');
+      setFiltrado([]);
     }
   }, [busqueda, navigation]);
 
@@ -48,9 +52,6 @@ const Home = ({ navigation }) => {
             styles.searchContainer,
             {
               backgroundColor: theme.colors.cardBackground,
-              // Aquí se quita el borde del contenedor para eliminar la línea externa
-              // borderColor: modoOscuro ? '#CCCCCC' : theme.colors.text,
-              // borderWidth: 1,
             },
           ]}
         >
@@ -77,7 +78,7 @@ const Home = ({ navigation }) => {
             keyExtractor={(item) => item.id?.toString() || item.name}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => setBusqueda(item.name)}>
-                <Text style={{ color: theme.colors.text }}>{item.name}</Text>
+                <Text style={{ padding: 5, fontSize: 20, color: theme.colors.text }}>{item.name}</Text>
               </TouchableOpacity>
             )}
           />
@@ -93,10 +94,13 @@ const Home = ({ navigation }) => {
               borderWidth: modoOscuro ? 1 : 0,
             },
           ]}
-          onPress={() => navigation.navigate('Medicamentos')}
+          onPress={() => navigation.navigate('Medicamentos', { busqueda: busqueda })}
         >
           <Text style={[styles.buttonText, { color: '#fff' }]}>Consultar</Text>
         </TouchableOpacity>
+
+        <Ubicacion></Ubicacion>
+        
       </View>
     </SafeAreaView>
   );

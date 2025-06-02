@@ -4,11 +4,27 @@ import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity } from "r
 import { Button, Card } from "react-native-paper";
 import CanastaBoton from "./CanastaBoton";
 import FiltroEpsCard from "./FiltroEpsCard";
+import MapView, { Marker } from "react-native-maps";
+import * as Location from 'expo-location';
 
+async function getCoordenadas(direccion) {
+  try {
+    const geocode = await Location.geocodeAsync(direccion);
+    if (geocode.length > 0) {
+      return {
+        latitude: geocode[0].latitude,
+        longitude: geocode[0].longitude,
+      };
+    }
+  } catch (error) {
+    console.log('Error en geocodificación:', error);
+  }
+  return null;
+}
 
 const FarmaciaDetail = ({ route }) => {
   const { item: farmacia } = route.params;
-  const {canasta, stock, redEps, isLoading }= useContext(AuthContext); 
+  const {canasta, stock, redEps, isLoading, farmacias }= useContext(AuthContext); 
   const [eps, setEps] = useState([]);
 
   useEffect(() => {
@@ -33,6 +49,19 @@ const FarmaciaDetail = ({ route }) => {
         </Card.Content>
       </Card>
 
+      <MapView style={styles.map}
+                initialRegion={{
+                          latitude: farmacia.coords.latitude,
+                          longitude: farmacia.coords.longitude,
+                          latitudeDelta: 0.0022,
+                          longitudeDelta: 0.0021,
+            }}>
+               <Marker
+                coordinate={{ latitude: farmacia.coords.latitude, longitude: farmacia.coords.longitude }}
+                title={`Farmacia: ${farmacia.direccion}`}
+                />
+            </MapView>
+      
       <Text style={styles.listTitle}>EPS Asociadas</Text>
             {eps.length > 0 ? (
               <FlatList
@@ -51,6 +80,7 @@ const FarmaciaDetail = ({ route }) => {
                 Esta farmacia no tiene convenio con ninguna EPS.
               </Text>
             )}
+       
     </View>
   );
 };
@@ -139,6 +169,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
   },
+  map: {
+    width:'100%',
+    height: '30%',
+    padding:10,
+  }
 });
 
 export default FarmaciaDetail;

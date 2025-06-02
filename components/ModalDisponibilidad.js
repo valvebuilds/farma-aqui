@@ -4,12 +4,13 @@ import { FarmaciaCard } from "./FarmaciaCard"
 import { Modal, View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native"; // ✅
 import { Button, Card } from "react-native-paper";
 
-const ModalDisponibilidad = ({visible, onClose, navigation}) =>{
+const ModalDisponibilidad = ({visible, setVisible, onClose, navigation}) =>{
     
     const { canasta, stock, farmacias } = useContext(AuthContext);
     const [resultado, setResultado] = useState({ todos: [], algunos: [], ninguno: false });
 
     const irADetalleFarmacia = (nombre) => {
+        setVisible(false);
         const farmaciaEncontrada = farmacias.find(f => f.nombre_del_establecimiento === nombre);
             if (farmaciaEncontrada) {navigation.navigate('Detalles de Farmacia', { item: farmaciaEncontrada });
             } else {
@@ -73,8 +74,8 @@ const ModalDisponibilidad = ({visible, onClose, navigation}) =>{
                     <Text style={styles.subtitle}>Farmacias con algunos medicamentos:</Text>
                     {resultado.algunos.map((item, id) => (
                         <TouchableOpacity onPress={() => irADetalleFarmacia(item.farmacia)}>
-                            <View key={id}>
-                                <Text style={styles.text}>• {item.farmacia}</Text>
+                            <View key={id} style={styles.drogueria}>
+                                <Text style={styles.title}>{item.farmacia}</Text>
                                 <Text style={styles.text}>Tiene: {item.disponibles.map(d => d.name).join(', ')}</Text>
                             </View>
                         </TouchableOpacity>
@@ -142,6 +143,17 @@ modalBackground: {
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  drogueria:{
+    backgroundColor: 'white',
+    borderRadius: 11,
+    padding: 5,
+    margin: 5,
+  },
+  title:{
+    color: '#6C8CBF',
+    fontSize: 16,
+    fontWeight: '800'
   }
 });
 export default ModalDisponibilidad;

@@ -11,6 +11,7 @@ import LoginScreen from './screens/LoginScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import CanastaBoton from './components/CanastaBoton';
 import FarmaciaDetail from './components/FarmaciaDetail';
+import CrearTurno from './screens/CrearTurno';
 import { createNavigationContainerRef } from '@react-navigation/native';
 
 
@@ -26,12 +27,13 @@ const Stack= createNativeStackNavigator();
 
 function StackGroup(){
     return(
-    <Stack.Navigator initialRouteName="Home">
+    <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component ={LoginScreen}></Stack.Screen>
         <Stack.Screen name="Home" component={TabGroup} options={{ headerShown: false }}/>
         <Stack.Screen name="Medicamentos" component={Medicamentos} />
         <Stack.Screen name="Detalles" component={MedicamentoDetail}/>
         <Stack.Screen name="Detalles de Farmacia" component={FarmaciaDetail}/>
+        <Stack.Screen name="CrearTurno" component={CrearTurno}></Stack.Screen>
     </Stack.Navigator>
     )
 }

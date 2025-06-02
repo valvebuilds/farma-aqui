@@ -18,9 +18,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 const MIURL = "https://farma-aqui-default-rtdb.firebaseio.com/";
 
 const CrearTurno = ({ navigation }) => {
-  const { farmacias, user } = useContext(AuthContext);
+  const { farmacias, uid, turnos, agregarTurno } = useContext(AuthContext);
   const farmaciasArray = farmacias ? Object.values(farmacias) : [];
-
   const [selectedFarmaciaIndex, setSelectedFarmaciaIndex] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -43,7 +42,7 @@ const CrearTurno = ({ navigation }) => {
     }
 
     const turno = {
-      farmaciaNombre: farmacia.nombre,
+      farmaciaNombre: farmacia.nombre_del_establecimiento,
       lugar: farmacia.direccion,
       fecha: selectedDate.toISOString().slice(0, 10),
       hora: selectedDate.toTimeString().slice(0, 5),
@@ -51,7 +50,7 @@ const CrearTurno = ({ navigation }) => {
     };
 
     try {
-      await axios.post(`${MIURL}turnos/${user.uid}.json`, turno);
+      agregarTurno(turno);
       Alert.alert('Turno guardado', 'El turno fue registrado correctamente');
       navigation.goBack(); // Volver a la pantalla anterior
     } catch (error) {
@@ -62,7 +61,6 @@ const CrearTurno = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Asignar nuevo turno</Text>
-
       <View style={styles.pickerContainer}>
         <Picker
           selectedValue={selectedFarmaciaIndex}
@@ -70,7 +68,7 @@ const CrearTurno = ({ navigation }) => {
         >
           <Picker.Item label="Seleccione una farmacia..." value={null} />
           {farmaciasArray.map((f, idx) => (
-            <Picker.Item key={idx} label={f.nombre} value={idx} />
+            <Picker.Item key={idx} label={f.nombre_del_establecimiento} value={idx} />
           ))}
         </Picker>
       </View>

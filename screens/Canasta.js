@@ -26,6 +26,7 @@ function Canasta( {navigation}){
 
             <ModalDisponibilidad 
             visible={modalVisible}
+            setVisible={setModalVisible}
             onClose={() => setModalVisible(false)}
             navigation={navigation} 
             />

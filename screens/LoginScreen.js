@@ -11,7 +11,7 @@ const LoginScreen = ({ navigation }) => {
 
   const [error, setError] = useState('');
 
-  const { token, asignarToken } = useContext(AuthContext); // Asegúrate de que el contexto esté correctamente importado y utilizado
+  const { asignarToken, asignarUid } = useContext(AuthContext); // Asegúrate de que el contexto esté correctamente importado y utilizado
 
   const handleLogin = async () => {
     setError(''); 
@@ -36,6 +36,7 @@ const LoginScreen = ({ navigation }) => {
        // Guardar el token en el estado
     if (data.idToken) {
        asignarToken(data.idToken);
+       asignarUid(data.localId);
        console.log('Login exitoso, navegando a Home');
        navigation.navigate('Home'); }// Navegar a la pantalla de inicio
        else{ 

@@ -20,70 +20,10 @@ import { useNavigation } from '@react-navigation/native';
 const MIURL = "https://farma-aqui-default-rtdb.firebaseio.com/";
 
 const Turnos = () => {
-  const { farmacias, user } = useContext(AuthContext);
+  const { turnos } = useContext(AuthContext);
   const navigation = useNavigation();
-  const farmaciasArray = farmacias ? Object.values(farmacias) : [];
-
-  const [turnos, setTurnos] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedFarmaciaIndex, setSelectedFarmaciaIndex] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-
-  useEffect(() => {
-    if (!user) return;
-    axios
-      .get(`${MIURL}turnos/${user.uid}.json`)
-      .then(res => {
-        if (res.data) {
-          const dataTurnos = Object.values(res.data);
-          setTurnos(dataTurnos);
-        } else {
-          setTurnos([]);
-        }
-      })
-      .catch(() => {
-        Alert.alert('Error', 'No se pudieron cargar los turnos');
-      });
-  }, [user]);
-
-  const guardarTurno = async () => {
-    if (selectedFarmaciaIndex === null) {
-      Alert.alert('Error', 'Por favor seleccione una farmacia');
-      return;
-    }
-
-    const farmaciaSeleccionada = farmaciasArray[selectedFarmaciaIndex];
-    if (!farmaciaSeleccionada) {
-      Alert.alert('Error', 'Farmacia inválida seleccionada');
-      return;
-    }
-
-    const fecha = selectedDate.toISOString().slice(0, 10);
-    const hora = selectedDate.toTimeString().slice(0, 5);
-
-    const nuevoTurno = {
-      farmaciaNombre: farmaciaSeleccionada.nombre,
-      fecha,
-      hora,
-      lugar: farmaciaSeleccionada.direccion,
-      creadoEn: new Date().toISOString(),
-    };
-
-    try {
-      await axios.post(`${MIURL}turnos/${user.uid}.json`, nuevoTurno);
-      setTurnos([...turnos, nuevoTurno]);
-      setModalVisible(false);
-      setSelectedFarmaciaIndex(null);
-    } catch (error) {
-      Alert.alert('Error', 'No se pudo guardar el turno');
-    }
-  };
-
-  const handleDateChange = (event, date) => {
-    if (date) setSelectedDate(date);
-    setShowDatePicker(false);
-  };
+  
+  const dataTurnos = Object.values(turnos);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -92,7 +32,7 @@ const Turnos = () => {
           <Text style={styles.noTurnosText}>No tienes turnos disponibles</Text>
         ) : (
           <FlatList
-            data={turnos}
+            data={dataTurnos}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View style={styles.cardTurno}>
@@ -109,41 +49,6 @@ const Turnos = () => {
           <Text style={styles.botonMasTexto}>＋</Text>
         </TouchableOpacity>
 
-        {/* Modal para agregar turno (si se sigue usando manualmente) */}
-        <Modal visible={modalVisible} animationType="slide" transparent={true}>
-          <View style={styles.modalBackground}>
-            <View style={styles.modalContainer}>
-              <Text style={styles.modalTitle}>Asignar turno</Text>
-
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={selectedFarmaciaIndex}
-                  onValueChange={(itemValue) => setSelectedFarmaciaIndex(itemValue)}
-                >
-                  <Picker.Item label="Seleccione una farmacia..." value={null} />
-                  {farmaciasArray.map((farmacia, index) => (
-                    <Picker.Item key={index} label={farmacia.nombre} value={index} />
-                  ))}
-                </Picker>
-              </View>
-
-              {showDatePicker && (
-                <DateTimePicker
-                  value={selectedDate}
-                  mode="datetime"
-                  display={Platform.OS === 'ios' ? 'inline' : 'default'}
-                  onChange={handleDateChange}
-                  minimumDate={new Date()}
-                />
-              )}
-
-              <View style={styles.botonesModal}>
-                <Button title="Cancelar" onPress={() => { setModalVisible(false); setSelectedFarmaciaIndex(null); }} />
-                <Button title="Agregar turno" onPress={guardarTurno} />
-              </View>
-            </View>
-          </View>
-        </Modal>
       </View>
     </SafeAreaView>
   );
